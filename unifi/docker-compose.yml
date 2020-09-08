@@ -1,0 +1,50 @@
+version: '3.5'
+networks:
+  proxy:
+    external: true 
+
+services:
+  unifi:
+    image: ryansch/unifi-rpi:latest
+    container_name: unifi
+    restart: always
+    networks:
+      proxy: {}
+    ports:
+      - "443:8443"
+      - "3478:3478/tcp"
+      - "3478:3478/udp"
+      - "5514:5514"
+      - "8880:8880"
+      - "8843:8843"
+      - "6789:6789"
+      - "27117:27117"
+      - "5656-5699:5656-5699"
+      - "10001:10001"
+      - "1900:1900" 
+    # Uncomment the following to set java options
+    environment:
+      JAVA_OPTS: -Xmx512M
+      VIRTUAL_HOST: unifi.pi.soniqua
+      VIRTUAL_PORT: 8080
+    volumes:
+      # Unifi v5.0.7 creates all of these directories (some remain empty)
+      - config:/var/lib/unifi
+      - log:/usr/lib/unifi/logs
+      - log2:/var/log/unifi
+      - run:/usr/lib/unifi/run
+      - run2:/run/unifi
+      - work:/usr/lib/unifi/work
+volumes:
+  config:
+    driver: local
+  log:
+    driver: local
+  log2:
+    driver: local
+  run:
+    driver: local
+  run2:
+    driver: local
+  work:
+    driver: local

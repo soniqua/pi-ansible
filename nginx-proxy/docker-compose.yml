@@ -1,0 +1,19 @@
+version: "3.5"
+
+networks:
+  proxy:
+    external: false
+    name: proxy
+# https://github.com/pi-hole/docker-pi-hole/blob/master/README.md
+
+services:
+  http-proxy:
+    image: alexanderkrause/rpi-nginx-proxy
+    container_name: nginx-http
+    ports:
+      - '80:80'
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock'
+    restart: always
+    networks:
+      - proxy
