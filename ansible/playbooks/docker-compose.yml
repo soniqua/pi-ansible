@@ -1,0 +1,36 @@
+ - hosts: pi
+   gather_facts: no
+
+   tasks:
+
+   - name: Add pre-reqs for docker
+     command:
+       cmd: sudo apt-get install apt-transport-https ca-certificates software-properties-common -y
+
+   - name: Install docker
+     command:
+       cmd: curl -fsSL get.docker.com -o get-docker.sh && sh get-docker.sh
+
+   - name: Add pi to docker usergroup
+     command:
+       cmd: sudo usermod -aG docker pi
+
+   - name: Get docker CPG key
+     rpm_key:
+       state: present
+       key: https://download.docker.com/linux/raspbian/gpg
+
+   - name: Apt get and upgrade
+     command:
+       cmd: apt-get update && apt-get upgrade
+
+   - name: Start docker service
+     service:
+       name: docker
+       state: started
+
+   - name: Get docker version
+     command:
+       cmd: docker info
+     register: docker_version
+
